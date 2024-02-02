@@ -37,11 +37,8 @@ function App() {
   };
 
   const totalFeedback = useMemo(() => {
-    let sum = 0;
-    for (const key in feedback) {
-      sum += feedback[key];
-    }
-    return sum;
+    const { good, neutral, bad } = feedback;
+    return good + neutral + bad;
   }, [feedback]);
 
   return (
