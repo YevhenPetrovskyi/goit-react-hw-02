@@ -9,17 +9,15 @@ import './App.css';
 
 function App() {
   const [feedback, setFeedback] = useState(() => {
-    const savedFeedback = localStorage.getItem('feedback');
+    const savedFeedback = JSON.parse(localStorage.getItem('feedback'));
 
-    if (savedFeedback) {
-      return JSON.parse(savedFeedback);
-    }
-
-    return {
-      good: 0,
-      neutral: 0,
-      bad: 0,
-    };
+    return (
+      savedFeedback || {
+        good: 0,
+        neutral: 0,
+        bad: 0,
+      }
+    );
   });
 
   useEffect(() => {
