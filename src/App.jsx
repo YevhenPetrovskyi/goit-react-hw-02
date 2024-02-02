@@ -1,17 +1,30 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 import Description from './components/Description';
 import Options from './components/Options';
 import Feedback from './components/Feedback';
+import Notification from './components/Notification';
 
 import './App.css';
 
 function App() {
-  const [feedback, setFeedback] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
+  const [feedback, setFeedback] = useState(() => {
+    const savedFeedback = localStorage.getItem('feedback');
+
+    if (savedFeedback) {
+      return JSON.parse(savedFeedback);
+    }
+
+    return {
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    };
   });
+
+  useEffect(() => {
+    localStorage.setItem('feedback', JSON.stringify(feedback));
+  }, [feedback]);
 
   const addFeedbackHandler = (key) => {
     setFeedback({ ...feedback, [key]: feedback[key] + 1 });
@@ -33,8 +46,6 @@ function App() {
     return sum;
   }, [feedback]);
 
-  console.log(totalFeedback);
-
   return (
     <div className="App">
       <Description />
@@ -44,7 +55,7 @@ function App() {
         resetFeedback={resetFeedbackHandler}
       />
       {!totalFeedback ? (
-        <p>No feedback yet</p>
+        <Notification />
       ) : (
         <Feedback {...feedback} totalFeedback={totalFeedback} />
       )}
